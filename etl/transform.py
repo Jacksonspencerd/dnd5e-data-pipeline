@@ -18,6 +18,6 @@ def transform_spells(spells_data):
             "duration": spell.get("duration"),
             "concentration": spell.get("concentration"),
             "ritual": spell.get("ritual"),
-            "description": spell.get("description"),
+            "description": " ".join(spell.get("desc", [])),
         })
     return transformed_data

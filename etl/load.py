@@ -1,6 +1,6 @@
 # write to sqlite database
-
 import sqlite3
+import logging
 
 def create_tables(conn):
     cursor = conn.cursor()
@@ -41,3 +41,5 @@ def load_spells(conn, spells_data):
          spell["description"]
          ))
     conn.commit()
+    logging.info(f"Inserted {cursor.rowcount} rows into the spells table.")
+    
