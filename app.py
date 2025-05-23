@@ -12,6 +12,9 @@ if not os.path.exists(DB_PATH):
     run_pipeline(DB_PATH, sleep_time=0.1)
 
 def load_data():
+    if not os.path.exists(DB_PATH):
+        return pd.DataFrame()  # Return empty DataFrame if DB doesn't exist
+    # Connect to the SQLite database and load data into a DataFrame
     conn = sqlite3.connect(DB_PATH)
     df = pd.read_sql("SELECT * FROM spells", conn)
     conn.close()
@@ -23,7 +26,7 @@ def main():
 
     df = load_data()
     if df.empty:
-        st.warning("No spells data found. Please run the ETL process to load data.")
+        st.warning("No spells data found. The API may be down or the database is empty.")
         return
 
     # Sidebar filters

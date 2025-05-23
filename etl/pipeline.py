@@ -10,6 +10,10 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 def run_pipeline(db_path, sleep_time):
     logging.info("Starting ETL pipeline...")
 
+    if not spells:
+        logger.error("No spells data found. Exiting.")
+        return # exit early if no data
+
     # Extract
     spells_raw = get_spells(sleep_time)
     logging.info(f"Extracted {len(spells_raw)} spells.")
