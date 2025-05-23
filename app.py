@@ -1,8 +1,15 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
+import os
+from etl.pipeline import run_pipeline
 
 DB_PATH = "spells.db"
+
+# Check if the database file exists
+if not os.path.exists(DB_PATH):
+    from etl.pipeline import run_pipeline
+    run_pipeline(DB_PATH, sleep_time=0.1)
 
 def load_data():
     conn = sqlite3.connect(DB_PATH)
