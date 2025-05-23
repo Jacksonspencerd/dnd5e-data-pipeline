@@ -1,15 +1,15 @@
 # python image
-FROM python:3.11-slim
+FROM python:3.11-slim-bullseye
 
 # set environment variables
 WORKDIR /app
 
 #copy project files
-COPY . .
+COPY . /app
 
 # install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # run the application
-CMD ["python", "-m", "etl.pipeline", "--db", "spells.db", "--sleep", "0.1"]
+CMD ["streamlit", "run", "app.py", "--server.port=8501"]
 

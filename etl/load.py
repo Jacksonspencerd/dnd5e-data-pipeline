@@ -17,15 +17,19 @@ def create_tables(conn):
                     duration TEXT,
                     concentration BOOLEAN,
                     ritual BOOLEAN,
-                    description TEXT
+                    description TEXT,
+                    classes TEXT,
+                    higher_level TEXT,
+                    subclasses TEXT
                     )""")
     
 def load_spells(conn, spells_data):
+    inserted_rows = 0
     cursor = conn.cursor()
     for spell in spells_data:
         cursor.execute("""
-        INSERT OR REPLACE INTO spells (id, name, level, school, casting_time, range, components, material, duration, concentration, ritual, description)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        INSERT OR REPLACE INTO spells (id, name, level, school, casting_time, range, components, material, duration, concentration, ritual, description, classes, higher_level, subclasses)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (
          spell["index"], 
          spell["name"], 
@@ -38,8 +42,12 @@ def load_spells(conn, spells_data):
          spell["duration"], 
          spell["concentration"], 
          spell["ritual"], 
-         spell["description"]
+         spell["description"],
+         spell["classes"],
+         spell["higher_level"],
+         spell["subclasses"]
          ))
+        inserted_rows += 1
     conn.commit()
-    logging.info(f"Inserted {cursor.rowcount} rows into the spells table.")
+    logging.info(f"Inserted {inserted_rows} rows into the spells table.")
     

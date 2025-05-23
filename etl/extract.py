@@ -35,7 +35,9 @@ def get_spells(sleep_time=0.1):
         detail = fetch_endpoint(f"spells/{index}")
         if detail:
             # Check if 'desc' is in the detail
-            # print(f"{spell['index']}: desc found? {'desc' in detail}")
+            ## print(f"{spell['index']}: desc found? {'desc' in detail}")
+
+
             full_spell_data.append(detail)
 
         time.sleep(sleep_time)
