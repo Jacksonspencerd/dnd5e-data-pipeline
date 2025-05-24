@@ -32,17 +32,6 @@ def get_unique_classes(df):
                 pass 
     return sorted(class_set)
 
-def get_unique_subclasses(df):
-    subclass_set = set()
-    for subclass_list in df["subclasses"]:
-        if subclass_list:
-            try:
-                for subclass in json.loads(subclass_list):
-                    subclass_set.add(subclass)
-            except json.JSONDecodeError:
-                pass
-    return sorted(subclass_set)
-
 
 
 def main():
@@ -56,10 +45,8 @@ def main():
     
     # get unique classes and subclasses
     all_classes = get_unique_classes(df)
-    all_subclasses = get_unique_subclasses(df)
 
     selected_classes = st.sidebar.multiselect("Select Classes", all_classes, default=all_classes)
-    selected_subclasses = st.sidebar.multiselect("Select Subclasses", all_subclasses, default=all_subclasses)
 
     # Filter the DataFrame based on selected classes and subclasses
     def class_filter(row):
@@ -67,16 +54,9 @@ def main():
             return selected_class in json.loads(row["classes"])
         except:
             return False
-            
-    def subclass_filter(row):
-        try:
-            return selected_subclass in json.loads(row["subclasses"])
-        except:
-            return False
         
     
     filtered_df = df[df.apply(class_filter, axis=1)]
-    filtered_df = df[df.apply(subclass_filter, axis=1)]
 
     # --- Sidebar ---
     st.sidebar.header("Filter Spells")
