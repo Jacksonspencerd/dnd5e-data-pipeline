@@ -5,9 +5,9 @@ def transform_spells(spells_data):
 
     # Iterate through the list of spells and transform each one
     for spell in spells_data:
-        # Extract classes nested list and flatten to a comma-separated string
+        # Extract class names from the spell data
         classes = spell.get("classes", [])
-        class_names = ", ".join(cls.get("name", "") for cls in classes)
+        class_names = [cls.get("name", "") for cls in classes]
 
 
         transformed_data.append({
