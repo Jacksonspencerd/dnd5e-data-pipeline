@@ -83,14 +83,9 @@ def main():
 
     schools = sorted(df["school"].dropna().unique())
     levels = sorted(df["level"].dropna().unique())
-    classes = sorted(df["classes"].dropna().unique())
-    subclasses = sorted(df["subclasses"].dropna().unique())
-
 
     selected_school = st.sidebar.selectbox("School of Magic", ["All"] + schools)
     selected_level = st.sidebar.selectbox("Spell Level", ["All"] + [str(l) for l in levels])
-    selected_class = st.sidebar.selectbox("Class", ["All"] + classes)
-    selected_subclass = st.sidebar.selectbox("Subclass", ["All"] + subclasses)
 
     search = st.text_input("Search by name or description:")
 
@@ -98,11 +93,6 @@ def main():
     filtered_df = df.copy()
 
     # Filter by class, subclass, school, and level
-    if selected_class != "All":
-        filtered_df = filtered_df[filtered_df["classes"] == selected_class]
-    
-    if selected_subclass != "All":
-        filtered_df = filtered_df[filtered_df["subclasses"] == selected_subclass]
 
     if selected_school != "All":
         filtered_df = filtered_df[filtered_df["school"] == selected_school]
