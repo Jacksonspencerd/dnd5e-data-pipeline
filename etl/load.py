@@ -1,6 +1,7 @@
 # write to sqlite database
 import sqlite3
 import logging
+import json
 
 def create_tables(conn):
     cursor = conn.cursor()
@@ -27,6 +28,11 @@ def load_spells(conn, spells_data):
     inserted_rows = 0
     cursor = conn.cursor()
     for spell in spells_data:
+        # Convert lists to strings for storage
+        spell["classes"] = json.dumps(spell["classes"])
+        spell["subclasses"] = json.dumps(spell["subclasses"])
+
+        
         cursor.execute("""
         INSERT OR REPLACE INTO spells (id, name, level, school, casting_time, range, components, material, duration, concentration, ritual, description, classes, higher_level, subclasses)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
