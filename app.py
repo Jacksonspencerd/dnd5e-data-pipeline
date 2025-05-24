@@ -46,17 +46,22 @@ def main():
     # get unique classes and subclasses
     all_classes = get_unique_classes(df)
 
-    selected_classes = st.sidebar.multiselect("Select Classes", all_classes, default=all_classes)
+    selected_classes = st.sidebar.multiselect("Select Classes", all_classes, default=[])
 
-    # Filter the DataFrame based on selected classes and subclasses
+    # Filter spells based on selected classes:
     def class_filter(row):
+        if not selected_classes:
+            # No classes selected → show all spells
+            return True
         try:
-            return selected_class in json.loads(row["classes"])
+            spell_classes = json.loads(row["classes"])
+            # Check if any selected class is in the spell's classes
+            return any(cls in spell_classes for cls in selected_classes)
         except:
             return False
-        
-    
+
     filtered_df = df[df.apply(class_filter, axis=1)]
+
 
     # --- Sidebar ---
     st.sidebar.header("Filter Spells")
@@ -69,8 +74,6 @@ def main():
 
     search = st.text_input("Search by name or description:")
 
-    # --- Filtering ---
-    filtered_df = df.copy()
 
     # Filter by class, subclass, school, and level
 
