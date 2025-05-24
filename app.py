@@ -1,4 +1,5 @@
 import streamlit as st
+import json
 import sqlite3
 import pandas as pd
 import os
@@ -20,6 +21,30 @@ def load_data():
     conn.close()
     return df
 
+def get_unique_classes(df):
+    class_set = set()
+    for class_list in df["classes"]:
+        if class_list:
+            try:
+                for cls in json.loads(class_list):
+                    class_set.add(cls)
+            except json.JSONDecodeError:
+                pass 
+    return sorted(class_set)
+
+def get_unique_subclasses(df):
+    subclass_set = set()
+    for subclass_list in df["subclasses"]:
+        if subclass_list:
+            try:
+                for subclass in json.loads(subclass_list):
+                    subclass_set.add(subclass)
+            except json.JSONDecodeError:
+                pass
+    return sorted(subclass_set)
+
+
+
 def main():
     st.title("D&D 5E Spellbook")
     st.markdown("Explore spells from the D&D 5E API with filters and search.")
@@ -28,15 +53,38 @@ def main():
     if df.empty:
         st.warning("No spells data found. The API may be down or the database is empty.")
         return
+    
+    # get unique classes and subclasses
+    all_classes = get_unique_classes(df)
+    all_subclasses = get_unique_subclasses(df)
 
-    # Sidebar filters
+    selected_classes = st.sidebar.multiselect("Select Classes", all_classes, default=all_classes)
+    selected_subclasses = st.sidebar.multiselect("Select Subclasses", all_subclasses, default=all_subclasses)
+
+    # Filter the DataFrame based on selected classes and subclasses
+    def class_filter(row):
+        try:
+            return selected_class in json.loads(row["classes"])
+        except:
+            return False
+            
+    def subclass_filter(row):
+        try:
+            return selected_subclass in json.loads(row["subclasses"])
+        except:
+            return False
+        
+    
+    filtered_df = df[df.apply(class_filter, axis=1)]
+    filtered_df = df[df.apply(subclass_filter, axis=1)]
+
+    # --- Sidebar ---
     st.sidebar.header("Filter Spells")
 
     schools = sorted(df["school"].dropna().unique())
     levels = sorted(df["level"].dropna().unique())
     classes = sorted(df["classes"].dropna().unique())
     subclasses = sorted(df["subclasses"].dropna().unique())
-
 
 
     selected_school = st.sidebar.selectbox("School of Magic", ["All"] + schools)
