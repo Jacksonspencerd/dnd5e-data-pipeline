@@ -5,3 +5,5 @@ next steps:
 - optimization
 - replace null values
 - responsive design
+- add airflow for scheduling
+- add caching 
